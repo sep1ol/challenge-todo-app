@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 
 from ..db_setup import Base
 
@@ -11,3 +11,4 @@ class Todos(Base):
     description = Column(String(200))
     date = Column(DateTime)
     priority = Column(Integer)
+    completed = Column(Boolean, nullable=False, default=False)
