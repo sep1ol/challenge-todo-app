@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'package:todo_app/network/constants/api_url.dart';
+import 'package:todo_app/main.dart';
+import 'package:todo_app/network/todos_request.dart';
 
 class CreateTodo extends StatelessWidget {
   @override
@@ -27,6 +32,22 @@ class _TodoFormState extends State<TodoForm> {
   DateTime _date = DateTime.now();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  createTodo() async {
+    var newTodo = json.encode({
+      "task": _task.toString(),
+      "priority": _priority.toString(),
+      "date": _date.toString()
+    });
+
+    var response = await http.post(
+      Uri.parse('${api_url}/api/todos/create'),
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: newTodo,
+    );
+  }
 
   Widget _buildTodoField() {
     return TextFormField(
@@ -111,21 +132,28 @@ class _TodoFormState extends State<TodoForm> {
                 _buildPriorityField(),
                 _buildDateField(),
                 SizedBox(height: 100),
-                Text('${_task}///${_date}///${_priority}'),
                 ElevatedButton(
                   onPressed: () {
                     if (!_formKey.currentState.validate()) {
                       return;
                     }
-
                     _formKey.currentState.save();
+                    createTodo();
+                    Navigator.pop(
+                      context,
+                      MaterialPageRoute(builder: (context) => TodoApp()),
+                    );
+                    fetchTodos();
                   },
-                  child: Text(
-                    'Submit',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
+                  child: Container(
+                    child: Text(
+                      'Add task',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
                     ),
+                    margin: EdgeInsets.all(15),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red[600],

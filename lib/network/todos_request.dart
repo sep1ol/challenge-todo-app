@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
-import 'package:todo_app/models/todos.dart';
 import 'constants/api_url.dart';
+import 'package:todo_app/models/todos.dart';
 
 List<Todo> parseTodos(String responseBody) {
   var list = json.decode(responseBody) as List<dynamic>;
