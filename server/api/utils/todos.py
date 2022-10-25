@@ -36,9 +36,7 @@ def delete_task(db: Session, task_id: int):
 
 def complete_task(db: Session, task_id: int):
     todo = get_task(db, task_id)
-
-    if todo.completed == False:
-        todo.completed = True
-        db.commit()
-        db.refresh(todo)
+    todo.completed = not todo.completed
+    db.commit()
+    db.refresh(todo)
     return todo
